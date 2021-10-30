@@ -39,13 +39,10 @@ public class Client {
            
         while (in != null) {
             
-            //fromServer = in.readUTF();
             // Terminating the client in case of authentication fail
           
            char a = in.readChar();
            char b = in.readChar();
-           char type = 's'; // s for string
-          // byte[] dataInBytes = fromUser.getBytes(StandardCharsets.UTF_8);
 
           
           if(a == '0' && b == '1') {
@@ -87,9 +84,7 @@ public class Client {
            else{
            
            System.out.println("server: " + a + b);
-          //  System.out.printf("client: ");
             fromUser = stdIn.readLine();
-            
             byte[] dataInBytes = fromUser.getBytes(StandardCharsets.UTF_8);
             out.writeChar(type);
             out.writeChar(type);
@@ -167,4 +162,5 @@ public static String appendToken(String msg, String token){
 
 
 }
+
 
