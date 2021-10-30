@@ -17,7 +17,6 @@ public class coreNetServer extends Thread {
         ServerSocket server = null;
 
         try {
-           // int randomPortNum = (int) (Math.random() * (upper - lower)) + lower;
 			// server is listening on port 1234
 			server = new ServerSocket(port);
 			server.setReuseAddress(true);
@@ -81,7 +80,6 @@ public class coreNetServer extends Thread {
             String clientHashToken = null;
             String clientUsrname = null;
             String fromUser, fromServer = "placeholder";
-           // out.writeUTF("welcome to server! please provide your username:");
            
             // || Username Authentication || \\
             fromUser = in.readUTF(); // first read from socket
@@ -366,10 +364,8 @@ public static String yavuzJournalParser(String JSON){
     }   
     return responseFormatter.toString();
 }
-
-
-
 }
+
 
 
 
