@@ -181,7 +181,7 @@ public class coreNetServer extends Thread {
                 System.out.println("client left the server!");
                 out.writeUTF("exit");
                 break;
-            }
+                }
                 if (!validateMessage(fromUser, clientHashToken)){
                     String err = "token is corrupted for ["+ clientNumber +"], connection is being ended";
                     System.out.println(err);
@@ -192,9 +192,16 @@ public class coreNetServer extends Thread {
                 fromUser = deTokenizeMessage(fromUser);
                 System.out.println("client: " + fromUser);
                 String[] QueryAndTypeArray = fromUser.split(" ", 2);
+                
+                if(!QueryAndTypeArray[0].equals("-a") && !QueryAndTypeArray[0].equals("-j")) {
+                    out.writeUTF(" illegal query arguement, correct format: \n -a / -j \"query\" \n please try again:");
+                }
+                else{
                 char query_type = QueryAndTypeArray[0].charAt(1);
                 query = QueryAndTypeArray[1];
-               // add query result here 
+               
+               
+                // add query result here 
                 String newUrlString = constructURL(query, query_type);
                 URL u = new URL(newUrlString);
                 URLConnection conn = u.openConnection();
@@ -216,7 +223,9 @@ public class coreNetServer extends Thread {
                 else{
                     out.writeUTF(" illegal query arguement, correct format: \n -a / -j \"query\" \n please try again:");
                 }
+            } 
             }
+            
             System.out.println("bu thread[" + clientNumber + "] bitmiş");
         }
        
@@ -365,6 +374,7 @@ public static String yavuzJournalParser(String JSON){
     return responseFormatter.toString();
 }
 }
+
 
 
 
