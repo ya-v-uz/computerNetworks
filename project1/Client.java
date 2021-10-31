@@ -30,19 +30,21 @@ public class Client {
         BufferedReader stdIn = new BufferedReader ( new InputStreamReader (System.in));
         String fromServer, fromUser = "placeholder";
         
+
         
         System.out.println("-------------------------");
         System.out.println("connected to server!");
         System.out.println("-------------------------");
         out.writeUTF(usrname);
         
+        
            
         while (in != null) {
             
             // Terminating the client in case of authentication fail
-          
-           char a = in.readChar();
-           char b = in.readChar();
+            try{
+                char a = in.readChar();
+                char b = in.readChar();
 
           
           if(a == '0' && b == '1') {
@@ -80,7 +82,6 @@ public class Client {
                 break;
            }
 
-           
            else{
            
            System.out.println("server: " + a + b);
@@ -91,10 +92,16 @@ public class Client {
             out.writeInt(dataInBytes.length);
             out.write(dataInBytes);
         }
-            
 
+        }
+     catch(IOException e) {
+        System.out.println("server: Authentication Fail! reason: Timed out");
+       // e.printStackTrace();
+        System.exit(-1);
+        }
+        }   
         
-    }   
+        
 
         // Query Phase
 
@@ -121,10 +128,17 @@ public class Client {
         
         System.out.println("socket closed");    
     }
-  }
+    catch(IOException e) {
+        System.out.println("server: Connection refused! reason: Timed out");
+        System.exit(-1);
+        }
+    
 
 
+}
 
+
+// Functions:
 
 public static String decapsulateMessage(DataInputStream into, int message_length) {
     byte[] messageByte = new byte[message_length];
@@ -148,6 +162,7 @@ public static String decapsulateMessage(DataInputStream into, int message_length
    
 }
 catch (IOException e) {
+    System.out.println("Connection timed out!");
     e.printStackTrace();
 }
 return message.toString();
