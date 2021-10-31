@@ -86,8 +86,8 @@ public class Client {
            System.out.println("server: " + a + b);
             fromUser = stdIn.readLine();
             byte[] dataInBytes = fromUser.getBytes(StandardCharsets.UTF_8);
-            out.writeChar(type);
-            out.writeChar(type);
+            out.writeChar('x');
+            out.writeChar('y');
             out.writeInt(dataInBytes.length);
             out.write(dataInBytes);
         }
