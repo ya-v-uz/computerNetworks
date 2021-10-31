@@ -51,9 +51,12 @@ public class coreNetServer extends Thread {
  private static class ClientHandler implements Runnable {
     private final Socket clientSocket;
     private final int clientNumber;
+    private String clientUsrname;
     private boolean auth_check;
     private boolean auth_fail;
     private boolean password_check = false;
+    private String Client_ip_adress;
+    private int Client_port;
 
     // Constructor
     public ClientHandler(Socket socket, int clientNumber)
@@ -76,9 +79,13 @@ public class coreNetServer extends Thread {
                 
             out = new DataOutputStream(clientSocket.getOutputStream());
             in = new DataInputStream(clientSocket.getInputStream());
+            clientSocket.setSoTimeout(15*1000); //15 seconds for read timeout
+            Client_ip_adress = clientSocket.getRemoteSocketAddress().toString();
+            Client_port = clientSocket.getLocalPort();
+            
 
             String clientHashToken = null;
-            String clientUsrname = null;
+            clientUsrname = null;
             String fromUser, fromServer = "placeholder";
            
             // || Username Authentication || \\
@@ -101,7 +108,7 @@ public class coreNetServer extends Thread {
             out.writeChar('0');
             out.writeChar('1');
             
-        }
+            }
             else{
                 out.writeChar('0');
                 out.writeChar('2');
@@ -178,7 +185,7 @@ public class coreNetServer extends Thread {
             
             while ((fromUser = in.readUTF()) != null) { // Query Phase
                 if(fromUser.equals("exit")) {
-                System.out.println("client left the server!");
+                System.out.println("client " + clientUsrname + " left the server!");
                 out.writeUTF("exit");
                 break;
                 }
@@ -229,15 +236,19 @@ public class coreNetServer extends Thread {
             System.out.println("bu thread[" + clientNumber + "] bitmiş");
         }
        
-        // Terminate the Thread (Either Auth_fail or Client Left)
+        // Terminate the Thread (Either Auth_fail or Client Left/timedout)
         else{
             out.writeUTF("auth_fail");
-            System.out.println("Client [" + clientNumber +  "] lost connection!");
+            System.out.println("Client [" + clientNumber + clientUsrname +  "] lost connection!");
             clientSocket.close();
         }
         }
         catch (IOException e) {
             e.printStackTrace();
+            if(auth_fail) {System.out.println("client [" + clientNumber + "]"+ clientUsrname +" failed authentication");}
+            else{
+            System.out.println("client [" + clientNumber + "]"+ clientUsrname +" timedout");
+            }
         }
         finally {
             try {
@@ -374,8 +385,6 @@ public static String yavuzJournalParser(String JSON){
     return responseFormatter.toString();
 }
 }
-
-
 
 
 
